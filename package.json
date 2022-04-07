@@ -4,6 +4,7 @@
   "description": "introduction to nodejs",
   "main": "intro.js",
   "scripts": {
+    "start": "node intro.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "sarthak chawla",

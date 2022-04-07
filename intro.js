@@ -5,7 +5,7 @@ let routes = {
     "/": "index.html",
     "/about": "about.html",
     "/contact": "contact.html",
-    "/demo": "demoHTML.htm"
+    "/demo": "demoHTML.htm",
     "/blog": "blog.html" // invalid route as file doesn't exist-> return 404
 }
 

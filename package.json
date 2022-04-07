@@ -8,5 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "sarthak chawla",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "http-status-codes": "^2.2.0"
+  }
 }

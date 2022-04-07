@@ -1,74 +1,50 @@
 const http = require('http');
 const fs = require('fs');
+const httpStatus = require('http-status-codes');
 
-let routes = {
-    "/": "index.html",
-    "/about": "about.html",
-    "/contact": "contact.html",
-    "/demo": "demoHTML.htm",
-    "/blog": "blog.html" // invalid route as file doesn't exist-> return 404
+const sendErrorResponse = (res) => {
+    res.writeHead(httpStatus.StatusCodes.NOT_FOUND, { 'Content-Type': 'text/html' });
+    res.end('<h1>404 Not Found</h1>');
 }
 
-
-// fs.appendFile("POLL1.html", "POLL ANS", function (err) {
-//     if (err) {
-//         console.log('Error writing file: ' + err);
-//         throw err;
-//     }
-//     console.log("Saved!");
-// });
-
-// fs.open("demoNEW3.html", "w", function (err, file) {
-//     if (err) {
-//         console.log('Error opening file: ' + err);
-//         throw err;
-//     }
-//     console.log('file opened');    
-// });
-
-
-// fs.writeFile("NewFileWrite.txt", data, function (err) {
-//     if (err) {
-//         console.log('Error writing file: ' + err);
-//         throw err;
-//     }
-//     console.log("Write Complete!");
-// });
-
-// fs.unlink("DEMONEW2.html", function (err) {
-//     if (err) {
-//         console.log('Error deleting file: ' + err);
-//         throw err;
-//     }
-//     console.log("File deleted!");
-// });
-
-
-fs.rename("demoNEW3.html", "demoNEW-11111111111.html", function (err) {
-    if (err) {
-        console.log('Error renaming file: ' + err);
-        throw err;
+const customReadFile = (filePath, res) => {
+    if (fs.existsSync(filePath)) {
+        fs.readFile(filePath, (err, data) => {
+            if (err) {
+                console.log(err);
+                sendErrorResponse(res);
+                return;
+            }
+            res.end(data);
+        });
     }
-    console.log("File renamed!");
-});
-
-
+    else {
+        sendErrorResponse(res);
+    }
+}
 
 //create a server object:
 const app = http.createServer(function (req, res) {
+    let url = req.url;
 
-
-    if (routes[req.url]) {
-        fs.readFile(routes[req.url], (err, data) => {
-            if (err) {
-                res.writeHead(404, "File Not Found");
-                res.end();
-            }
-            else {
-                res.writeHead(200, { 'Content-Type': 'text/html' });
-                res.end(data);
-            }
-        })
+    if (url.indexOf('.html') !== -1) {
+        res.writeHead(httpStatus.StatusCodes.OK, { 'Content-Type': 'text/html' });
+        customReadFile(`./views/${url}`, res);
+    }
+    else if (url.indexOf('.css') !== -1) {
+        res.writeHead(httpStatus.StatusCodes.OK, { 'Content-Type': 'text/css' });
+        customReadFile(`./public/${url}`, res);
+    }
+    else if (url.indexOf('.js') !== -1) {
+        res.writeHead(httpStatus.StatusCodes.OK, { 'Content-Type': 'text/javascript' });
+        customReadFile(`./public/${url}`, res);
+    }
+    else if (url.indexOf('.png') !== -1) {
+        res.writeHead(httpStatus.StatusCodes.OK, { 'Content-Type': 'image/png' });
+        customReadFile(`./public/${url}`, res);
+    }
+    else{
+        sendErrorResponse(res);
     }
 
 }).listen(3000, function () {

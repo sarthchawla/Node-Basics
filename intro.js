@@ -13,7 +13,7 @@ let routes = {
 const app = http.createServer(function (req, res) {
 
     if (routes[req.url]) {
-        fs.readFile(routes, (err, data) => {
+        fs.readFile(routes[req.url], (err, data) => {
             if (err) {                
                 res.writeHead(404, "File Not Found");
                 res.end();
